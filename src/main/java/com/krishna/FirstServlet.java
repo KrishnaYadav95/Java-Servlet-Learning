@@ -1,27 +1,38 @@
 package com.krishna;
 
+import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet("/firstServlet")
+@WebServlet("/FirstServlet")
 public class FirstServlet extends HttpServlet {
 // if we dont extend httpservlet then it will behave like a normql jqvq class
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void service(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-       String name= request.getParameter("uname");
-       String ucity= request.getParameter("ucity");
-       PrintWriter writer= response.getWriter();
-       writer.println("<html> <head> <title> Second WebApp </title> </head>");
+        System.out.println("Control in first servlet");
+        String name= request.getParameter("uname");
+        System.out.println("Name recieved" + name);
+        String city= request.getParameter("ucity");
+        RequestDispatcher reqDispatch= request.getRequestDispatcher("/SecondServlet");
 
-       writer.println("hello"+ name);
-       writer.println(" I know u r from "+ ucity);
-       writer.close();
+        HttpSession session = request.getSession();
+        session.setAttribute("name" ,name);
+
+        reqDispatch.forward(request , response);
+     //   reqDispatch.include(request , response);
+
+        PrintWriter writer= response.getWriter();
+        writer.println("<h1> Response from servlet one</h1>");
+        writer.close();
+      //  System.out.println("Control again in first servlet");
     }
 }
